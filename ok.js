@@ -7,29 +7,35 @@ puppeteer.use(StealthPlugin())
 const app = express()
 const PORT = process.env.PORT || 3000
 
+let browser
+
+async function getBrowser() {
+    if (!browser) {
+        browser = await puppeteer.launch({
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu'
+            ]
+        })
+        console.log('✅ Browser Launched')
+    }
+    return browser
+}
+
 async function openPage(url) {
-    const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: '/usr/bin/chromium-browser',
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu'
-        ]
-    })
+    const br = await getBrowser()
+    const page = await br.newPage()
 
     try {
-        const page = await browser.newPage()
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 })
-
         const html = await page.content()
-
-        await browser.close()
+        await page.close()
         return html
-
     } catch (err) {
-        await browser.close()
+        await page.close()
         throw err
     }
 }
@@ -38,13 +44,9 @@ app.get('/', (req, res) => res.send('Server running'))
 
 app.get('/random', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({
-            headless: true,
-            executablePath: '/usr/bin/chromium-browser',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        })
+        const br = await getBrowser()
+        const page = await br.newPage()
 
-        const page = await browser.newPage()
         await page.goto('https://mywaifulist.moe/random', { waitUntil: 'networkidle2' })
 
         const data = await page.evaluate(() => {
@@ -52,12 +54,14 @@ app.get('/random', async (req, res) => {
             return el ? el.getAttribute('data-page') : null
         })
 
-        await browser.close()
+        await page.close()
+
+        if (!data) return res.status(500).send('No Data')
 
         res.json(JSON.parse(data))
 
     } catch (err) {
-        console.log('ERROR →', err.message)
+        console.log('RANDOM ERROR →', err.message)
         res.status(500).send('Failed')
     }
 })
@@ -74,4 +78,7 @@ app.get('/character/:slug', async (req, res) => {
     }
 })
 
-app.listen(PORT, () => console.log(`Server running on ${PORT}`))
+app.listen(PORT, async () => {
+    console.log(`🚀 Server running on ${PORT}`)
+    await getBrowser()
+})
