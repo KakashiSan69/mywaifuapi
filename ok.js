@@ -11,11 +11,8 @@ let browser
 
 async function getBrowser() {
     if (!browser) {
-        const chromePath = await require('puppeteer').executablePath()
-
         browser = await puppeteer.launch({
             headless: true,
-            executablePath: chromePath,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -24,8 +21,9 @@ async function getBrowser() {
             ]
         })
 
-        console.log('✅ Chrome Found →', chromePath)
+        console.log('✅ Browser Launched (Render Safe)')
     }
+
     return browser
 }
 async function openPage(url) {
