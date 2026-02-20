@@ -13,7 +13,6 @@ async function getBrowser() {
     if (!browser) {
         browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: '/usr/bin/chromium-browser',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -22,7 +21,7 @@ async function getBrowser() {
             ]
         })
 
-        console.log('✅ Browser Launched (System Chromium)')
+        console.log('✅ Browser Launched')
     }
 
     return browser
