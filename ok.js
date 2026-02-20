@@ -11,11 +11,11 @@ let browser
 
 async function getBrowser() {
     if (!browser) {
+        const chrome = await puppeteer.executablePath()
+
         browser = await puppeteer.launch({
             headless: true,
-
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-
+            executablePath: chrome,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -23,7 +23,8 @@ async function getBrowser() {
                 '--disable-gpu'
             ]
         })
-        console.log('✅ Browser Launched')
+
+        console.log('✅ Browser Launched →', chrome)
     }
     return browser
 }
