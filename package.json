@@ -1,15 +1,12 @@
 {
   "name": "waifu-api",
   "version": "1.0.0",
-  "description": "Render safe MWL puppeteer API",
   "main": "ok.js",
   "scripts": {
-    "start": "node ok.js",
-    "postinstall": "npx puppeteer@21.7.0 browsers install chrome"
+    "start": "node ok.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer": "21.7.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
