@@ -11,11 +11,11 @@ let browser
 
 async function getBrowser() {
     if (!browser) {
-        const chrome = await puppeteer.executablePath()
+        const chromePath = await require('puppeteer').executablePath()
 
         browser = await puppeteer.launch({
             headless: true,
-            executablePath: chrome,
+            executablePath: chromePath,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -24,7 +24,7 @@ async function getBrowser() {
             ]
         })
 
-        console.log('✅ Browser Launched →', chrome)
+        console.log('✅ Chrome Found →', chromePath)
     }
     return browser
 }
