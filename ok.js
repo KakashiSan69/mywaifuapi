@@ -13,6 +13,9 @@ async function getBrowser() {
     if (!browser) {
         browser = await puppeteer.launch({
             headless: true,
+
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -24,7 +27,6 @@ async function getBrowser() {
     }
     return browser
 }
-
 async function openPage(url) {
     const br = await getBrowser()
     const page = await br.newPage()
