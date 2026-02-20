@@ -4,11 +4,11 @@
   "main": "ok.js",
   "scripts": {
     "start": "node ok.js",
-    "postinstall": "npx puppeteer-extra browsers install chrome"
+    "postinstall": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer": "^24",
+    "puppeteer": "^24.0.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
